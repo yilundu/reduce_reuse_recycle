@@ -15,7 +15,7 @@ For more info see the [project webpage](https://energy-based-model.github.io/red
 We provide two separate notebooks to aid in implementing the results illustrated in the paper. 
 
 * **notebooks/simple_distributions.ipynb** This notebook contains code for reproducing 2D distribution results in the paper. The notebook contains a stand-alone diffusion trainer for a EBM-parameterized model as well as code for different MCMC samplers (HMC, ULA, MALA, UHA) across different distribution combinations
-* **notebooks/image_tapestry.ipynb** This notebook contains code illustrating how we may use MCMC sampling on existing text-to-image to construct image tapestries. Our image tapestry results are done using the Imagen 64x64 model where we can define diffusion models across different image sizes in the pixel space. Here, tapestires are defined in latent space (where linear interpolations are not well defined) and thus results are substantially poorer (but illustrate how MCMC sampling may be easily implemented across different model compositions)
+* **notebooks/image_tapestry.ipynb** This notebook contains code illustrating how we may use MCMC sampling on existing text-to-image to construct image tapestries. Our image tapestry results are done using the Imagen 64x64 model where we can define diffusion models across different image sizes in the pixel space. Here, tapestires are defined in latent space (where linear interpolations are not well defined) and thus results are substantially poorer (but illustrate how MCMC sampling may be implemented in existing text-to-image models)
 
 ## Training Code
 
