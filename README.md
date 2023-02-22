@@ -1,7 +1,8 @@
 # Reduce, Reuse, Recycle: Compositional Generation with Energy-Based Diffusion Models and MCMC
 ## [<a href="https://energy-based-model.github.io/reduce-reuse-recycle/" target="_blank">Project Page</a>][<a href="https://colab.research.google.com/drive/1jvlzWMc6oo-TH1fYMl6hsOYfrcQj2rEs?usp=sharing" target="_blank">Colab</a>]
 
-![ezgif com-video-to-gif](https://user-images.githubusercontent.com/5572232/220243743-7826c5b0-a8f0-452b-b62e-5b4f6aed4a26.gif)
+![ezgif com-video-to-gif (1)](https://user-images.githubusercontent.com/5572232/220694796-cc599abc-086f-4030-857a-59c87468fa79.gif)
+
 
 We provide a framework for probabilistically composing and repurposing diffusion models across ifferent domains as described <a href="https://energy-based-model.github.io/reduce-reuse-recycle/" target="_blank">here</a>.
 
