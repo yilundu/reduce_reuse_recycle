@@ -1,7 +1,8 @@
 # Reduce, Reuse, Recycle: Compositional Generation with Energy-Based Diffusion Models and MCMC
-## [<a href="https://energy-based-model.github.io/reduce-reuse-recycle/" target="_blank">Project Page</a>][<a href="https://energy-based-model.github.io/reduce-reuse-recycle/" target="_blank">Colab</a>]
+## [<a href="https://energy-based-model.github.io/reduce-reuse-recycle/" target="_blank">Project Page</a>][<a href="https://colab.research.google.com/drive/1jvlzWMc6oo-TH1fYMl6hsOYfrcQj2rEs?usp=sharing" target="_blank">Colab</a>]
 
-![ezgif com-video-to-gif](https://user-images.githubusercontent.com/5572232/220243743-7826c5b0-a8f0-452b-b62e-5b4f6aed4a26.gif)
+![ezgif com-video-to-gif (1)](https://user-images.githubusercontent.com/5572232/220694796-cc599abc-086f-4030-857a-59c87468fa79.gif)
+
 
 We provide a framework for probabilistically composing and repurposing diffusion models across ifferent domains as described <a href="https://energy-based-model.github.io/reduce-reuse-recycle/" target="_blank">here</a>.
 
@@ -15,8 +16,48 @@ For more info see the [project webpage](https://energy-based-model.github.io/red
 We provide two separate notebooks to aid in implementing the results illustrated in the paper. 
 
 * **notebooks/simple_distributions.ipynb** This notebook contains code for reproducing 2D distribution results in the paper. The notebook contains a stand-alone diffusion trainer for a EBM-parameterized model as well as code for different MCMC samplers (HMC, ULA, MALA, UHA) across different distribution combinations
-* **notebooks/image_tapestry.ipynb** This notebook contains code illustrating how we may use MCMC sampling on existing text-to-image to construct image tapestries. Our image tapestry results are done using the Imagen 64x64 model where we can define diffusion models across different image sizes in the pixel space. Here, tapestires are defined in latent space (where linear interpolations are not well defined) and thus results are substantially poorer (but illustrate how MCMC sampling may be easily implemented across different model compositions)
+* **notebooks/image_tapestry.ipynb** This notebook contains code illustrating how we may use MCMC sampling on existing text-to-image to construct image tapestries. Our image tapestry results are done using the Imagen 64x64 model where we can define diffusion models across different image sizes in the pixel space. Here, tapestires are defined in latent space (where linear interpolations are not well defined) and thus results are substantially poorer (but illustrate how MCMC sampling may be implemented in existing text-to-image models)
 
 ## Training Code
 
-Most of the larger-scale experiments done in the paper were done using the computational infrastructure at DeepMind and cannot be released. If there is sufficient interest (feel free to start a github issue), I'll add a external PyTorch reimplementation of the experiments in the paper. Changing a diffusion model to a energy-based parameterization should only involve 3 lines of code -- just replace output prediction with `torch.autograd.grad([energy], [input])[0]` (see the 2D colab for an example).
+Most of the larger-scale experiments done in the paper were done using the computational infrastructure at DeepMind and cannot be released. Below is a PyTorch reimplementation written by  [Bharat Runwal](https://bharat-runwal.github.io/). 
+
+## Energy Based Diffusion Model Training 
+
+A PyTorch implementation of  **Reduce, Reuse, Recycle: Compositional Generation with Energy-Based Diffusion Models and MCMC**.
+
+--------------------------------------------------------------------------------------------------------
+* The codebase is built upon [GLIDE-Finetune](https://github.com/afiaka87/glide-finetune) and [Composable Diffusion](https://github.com/energy-based-model/Compositional-Visual-Generation-with-Composable-Diffusion-Models-PyTorch).
+
+
+
+## Installation
+
+Run following to create a conda environment using the requirements file, and activate it:
+```
+conda create --name compose_ebm --file requirements.txt
+conda activate compose_ebm
+```
+
+## Training
+
+To train the Energy Parameterized Classifier-Free Diffusion model you can run :
+
+```
+bash energy_train_ddp_64.sh
+```
+
+You can change the Energy score used for training here [Line](composable_diffusion\unet.py#L1398) , currently we are using a denoising autoencoder inspired energy function .
+
+## Inference Sampling
+
+```anneal_samplers.py``` containts the implementation of variaous samplers (HMC, UHMC, ULA, MALA) which can be used with reverse diffusion sampling.
+
+**Note :** In the current setting we use MCMC sampling for t > 50 as we saw in the last 50 steps the score functions doesn't change the image much. You can change this behaviour at this line [Line](composable_diffusion\sampler_gd.py#L485) . 
+Example of running MALA Sampler with trained chkpt path : 
+
+```
+python inf_sample.py --sampler MALA --ckpt_path "./checkpoints/Energy_object_chkpt_linear_100steps/model-ft-49x1874.pt" 
+
+```
+
