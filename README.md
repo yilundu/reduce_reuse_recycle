@@ -47,13 +47,13 @@ To train the Energy Parameterized Classifier-Free Diffusion model you can run :
 bash energy_train_ddp_64.sh
 ```
 
-You can change the Energy score used for training here [Line](composable_diffusion\unet.py#L1398) , currently we are using a denoising autoencoder inspired energy function .
+You can change the Energy score used for training here [Line](https://github.com/yilundu/reduce_reuse_recycle/blob/0231ae7a3ed397ba71e9c41c16508db29e4e251f/composable_diffusion/unet.py#L1398) , currently we are using a denoising autoencoder inspired energy function .
 
 ## Inference Sampling
 
 ```anneal_samplers.py``` containts the implementation of variaous samplers (HMC, UHMC, ULA, MALA) which can be used with reverse diffusion sampling.
 
-**Note :** In the current setting we use MCMC sampling for t > 50 as we saw in the last 50 steps the score functions doesn't change the image much. You can change this behaviour at this line [Line](composable_diffusion\sampler_gd.py#L485) . 
+**Note :** In the current setting we use MCMC sampling for t > 50 as we saw in the last 50 steps the score functions doesn't change the image much. You can change this behaviour at this line [Line](https://github.com/yilundu/reduce_reuse_recycle/blob/0231ae7a3ed397ba71e9c41c16508db29e4e251f/composable_diffusion/sampler_gd.py#L485) . 
 Example of running MALA Sampler with trained chkpt path : 
 
 ```

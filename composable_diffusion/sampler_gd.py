@@ -483,7 +483,7 @@ class Sampler_GaussianDiffusion:
                 out = out["sample"]
             
                 if i > 50 :
-                    out=sampler.sample_step(img, i,t, model_kwargs)
+                    out=sampler.sample_step(out, i,t, model_kwargs)
 
                 yield out
                 img = out
