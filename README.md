@@ -4,7 +4,7 @@
 ![ezgif com-video-to-gif (1)](https://user-images.githubusercontent.com/5572232/220694796-cc599abc-086f-4030-857a-59c87468fa79.gif)
 
 
-We provide a framework for probabilistically composing and repurposing diffusion models across ifferent domains as described <a href="https://energy-based-model.github.io/reduce-reuse-recycle/" target="_blank">here</a>.
+We provide a framework for probabilistically composing and repurposing diffusion models across different domains as described <a href="https://energy-based-model.github.io/reduce-reuse-recycle/" target="_blank">here</a>.
 
 [//]: # (### Abstract)
 > Since their introduction, diffusion models have quickly become the prevailing approach to generative modeling in many domains. They can be interpreted as learning the gradients of a time-varying sequence of log-probability density functions. This interpretation has motivated classifier-based and classifier-free guidance as methods for post-hoc control of diffusion models. In this work, we build upon these ideas using the score-based interpretation of diffusion models, and explore alternative ways to condition, modify, and reuse diffusion models for tasks involving compositional generation and guidance. In particular, we investigate why certain types of composition fail using current techniques and present a number of solutions. We conclude that the sampler (not the model) is responsible for this failure and propose new samplers, inspired by MCMC, which enable successful compositional generation. Further, we propose an energy-based parameterization of diffusion models which enables the use of new compositional operators and more sophisticated, Metropolis-corrected samplers. Intriguingly we find these samplers lead to notable improvements in compositional generation across a wide variety of problems such as classifier-guided ImageNet modeling and compositional text-to-image generation.
@@ -54,10 +54,10 @@ You can change the Energy score used for training here [Line](https://github.com
 ```anneal_samplers.py``` containts the implementation of variaous samplers (HMC, UHMC, ULA, MALA) which can be used with reverse diffusion sampling.
 
 **Note :** In the current setting we use MCMC sampling for t > 50 as we saw in the last 50 steps the score functions doesn't change the image much. You can change this behaviour at this line [Line](https://github.com/yilundu/reduce_reuse_recycle/blob/0231ae7a3ed397ba71e9c41c16508db29e4e251f/composable_diffusion/sampler_gd.py#L485) . 
-Example of running MALA Sampler with trained chkpt path : 
+Example of running MALA Sampler with trained chkpt path (download the checkpoint from [here](https://drive.google.com/file/d/19ay4bLVCQho8_aXtODWbDCpu6L2l58YB/view?usp=drive_link) or refer to the [colab](https://github.com/yilundu/reduce_reuse_recycle/blob/main/ebm_compose_blender.ipynb)  : 
 
 ```
-python inf_sample.py --sampler MALA --ckpt_path "./checkpoints/Energy_object_chkpt_linear_100steps/model-ft-49x1874.pt" 
+python inf_sample.py --sampler MALA --ckpt_path "ebm-49x1874.pt" 
 
 ```
 
