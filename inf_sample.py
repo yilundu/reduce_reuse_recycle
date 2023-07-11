@@ -122,8 +122,8 @@ guidance_scale = 4
 batch_size = 1
 
 
-labels = th.tensor([[ [0], [2] ]]).long() # Compose Cube And Cylinder Labels
-# labels = th.tensor([[ [1], [2] ]]).long() # # Compose Sphere And Cylinder Labels
+# labels = th.tensor([[ [0], [1] ]]).long() # Compose Cube And Sphere Labels
+labels = th.tensor([[ [1], [2] ]]).long() # # Compose Sphere And Cylinder Labels
 
 [print(get_caption_simple(lab.numpy())) for lab in labels[0]]
 print(labels)
@@ -269,8 +269,7 @@ elif args.sampler == 'HMC':
                 damping_coeff,
                 mass_diag_sqrt,
                 num_leapfrog_steps,
-                gradient_cha,
-                None)
+                gradient_cha)
 
 elif args.sampler == 'Rev_Diff':
     print("Using Reverse Diffusion Sampling only")
@@ -288,7 +287,7 @@ for k in range(4):
             (full_batch_size, 3, 64, 64),
             device=device,
             clip_denoised=True,
-            progress=False,
+            progress=True,
             model_kwargs=model_kwargs,
             cond_fn=None,
         )[:batch_size]
@@ -334,4 +333,4 @@ for i in range(1, columns*rows +1):
 
     plt.title(cap,fontsize=25)
 
-plt.savefig(f"Energy_Object_{cap}_CHA_{guidance_scale}.png")
+plt.savefig(f"Energy_Object_{cap}_{args.sampler}_{guidance_scale}.png")
