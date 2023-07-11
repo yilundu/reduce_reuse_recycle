@@ -37,7 +37,6 @@ class AnnealedMALASampler:
       
       # Acceptance Ratio
       if torch.log(torch.rand(1)) < log_alpha.detach().cpu():
-        
         x = x_proposal
         e_old = e_new
         grad = grad_new
@@ -115,7 +114,8 @@ class AnnealedCHASampler:
       v_prime = v * self._damping_coeff + np.sqrt(1. - self._damping_coeff**2) * eps * M
       
       energy_i, grad_i = self._gradient_function(x,ts,**model_args)
-
+      x_old = x.clone()
+      v_old =  v.clone()
       x_new, v_new = self.leapfrog_step_(x, v_prime, t, ts,grad_i, model_args)
       
       energy_new, grad_new = self._gradient_function(x_new,ts,**model_args)
@@ -137,7 +137,9 @@ class AnnealedCHASampler:
       if u <=alpha.cpu():  
         x = x_new
         v = v_new
-
+      else:
+        x = x_old
+        v = v_old
     
       # alpha = torch.exp(logp_accept)
       # mask = (torch.rand(x.shape[0]).cuda() < alpha).float().unsqueeze(1).unsqueeze(2).unsqueeze(3)
