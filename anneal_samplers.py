@@ -31,8 +31,8 @@ class AnnealedMALASampler:
       # Compute Energy of the samples 
       e_new,grad_new = self._gradient_function(x_proposal, ts, **model_args)
 
-      log_xhat_given_x = -0.5 * ((x_proposal - x - ss * grad) ** 2).sum() / (2 * ss)
-      log_x_given_xhat = -0.5 * ((x - x_proposal - ss * grad_new) ** 2).sum() / (2 * ss)
+      log_xhat_given_x = -1.0*((x_proposal - x - ss * grad) ** 2).sum() / (2 * ss**2)
+      log_x_given_xhat = -1.0 * ((x - x_proposal - ss * grad_new) ** 2).sum() / (2 * ss**2)
       log_alpha = e_new-e_old +log_x_given_xhat - log_xhat_given_x 
       
       # Acceptance Ratio
@@ -126,8 +126,8 @@ class AnnealedCHASampler:
       # log_v_new = torch.sum(v_dist.log_prob(v_new))
 
       
-      log_v_new = (-0.5*(1/M)) *torch.sum(v_new**2) # As mean 0 and Variance M 
-      log_v = (-0.5*(1/M)) *torch.sum(v_prime**2) 
+      log_v_new = (-0.5*(1/M**2)) *torch.sum(v_new**2) # As mean 0 and Variance M**2 
+      log_v = (-0.5*(1/M**2)) *torch.sum(v_prime**2) 
 
 
       logp_accept = energy_diff + (log_v_new - log_v)
