@@ -1397,13 +1397,13 @@ class Energy_UNetModel_full(nn.Module):
 
         # Energy Score = ||x -  f(x)||^2 AE based Energy
         energy_score = x-unet_out
-        energy_norm = 0.5 * (energy_score ** 2)
-        energy_norm= energy_norm.sum()
+        energy_norm_ = 0.5 * (energy_score ** 2)
+        energy_norm= energy_norm_.sum()
 
         if mala_sampler:
             
             eps = th.autograd.grad([energy_norm],[x],create_graph=False)[0]
-            return energy_norm,eps
+            return energy_norm_,eps
 
         if not eval:
             eps = th.autograd.grad([energy_norm],[x],create_graph=True)[0]            
