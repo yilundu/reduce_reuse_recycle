@@ -190,7 +190,7 @@ class ResBlock(TimestepBlock):
             h = in_conv(h)
         else:
             h = self.in_layers(x)
-        emb_out = self.emb_layers(emb).type(h.dtype)
+        emb_out = self.emb_layers(emb).to(h.dtype)
         while len(emb_out.shape) < len(h.shape):
             emb_out = emb_out[..., None]
         if self.use_scale_shift_norm:
@@ -279,7 +279,7 @@ class QKVAttention(nn.Module):
         weight = th.einsum(
             "bct,bcs->bts", q * scale, k * scale
         )  # More stable with f16 than dividing afterwards
-        weight = th.softmax(weight.float(), dim=-1).type(weight.dtype)
+        weight = th.softmax(weight.float(), dim=-1).to(weight.dtype)
         a = th.einsum("bts,bcs->bct", weight, v)
         return a.reshape(bs, -1, length)
 
@@ -606,7 +606,7 @@ class UNetModel(nn.Module):
             else:
                 raise NotImplementedError
 
-        h = x.type(self.dtype)
+        h = x.to(self.dtype)
         for module in self.input_blocks:
             h = module(h, emb)
             hs.append(h)
@@ -614,7 +614,7 @@ class UNetModel(nn.Module):
         for module in self.output_blocks:
             h = th.cat([h, hs.pop()], dim=1)
             h = module(h, emb)
-        h = h.type(x.dtype)
+        h = h.to(x.dtype)
         return self.out(h)
 
 
@@ -948,7 +948,7 @@ class UNetModel_full(nn.Module):
             else:
                 raise NotImplementedError
 
-        h = x.type(self.dtype)
+        h = x.to(self.dtype)
         for module in self.input_blocks:
             h = module(h, emb)
             hs.append(h)
@@ -956,7 +956,7 @@ class UNetModel_full(nn.Module):
         for module in self.output_blocks:
             h = th.cat([h, hs.pop()], dim=1)
             h = module(h, emb)
-        h = h.type(x.dtype)
+        h = h.to(x.dtype)
         return self.out(h)
 
 
@@ -1299,7 +1299,7 @@ class Energy_UNetModel_full(nn.Module):
         self.out = nn.Sequential(
             normalization(ch, swish=1.0),
             nn.Identity(),
-            zero_module(conv_nd(dims, input_ch, out_channels, 3, padding=1)),
+            conv_nd(dims, input_ch, out_channels, 3, padding=1),
         )
         self.use_fp16 = use_fp16
 
@@ -1382,7 +1382,7 @@ class Energy_UNetModel_full(nn.Module):
             else:
                 raise NotImplementedError
 
-        h = x.type(self.dtype)
+        h = x.to(self.dtype)
 
         for module in self.input_blocks:
             h = module(h, emb)
@@ -1391,7 +1391,7 @@ class Energy_UNetModel_full(nn.Module):
         for module in self.output_blocks:
             h = th.cat([h, hs.pop()], dim=1)
             h = module(h, emb)
-        h = h.type(x.dtype)
+        h = h.to(x.dtype)
 
         unet_out = self.out(h)
 
@@ -1399,6 +1399,10 @@ class Energy_UNetModel_full(nn.Module):
         energy_score = x-unet_out
         energy_norm_ = 0.5 * (energy_score ** 2)
         energy_norm= energy_norm_.sum()
+
+        # Energy Score = ||f(x)||^2  l2 norm squared
+        # energy_norm_ =  0.5 * (unet_out** 2)
+        # energy_norm = energy_norm_.sum()
 
         if mala_sampler:
             
