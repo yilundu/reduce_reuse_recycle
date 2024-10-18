@@ -1382,8 +1382,6 @@ class Energy_UNetModel_full(nn.Module):
             else:
                 raise NotImplementedError
 
-        h = x.to(self.dtype)
-
         for module in self.input_blocks:
             h = module(h, emb)
             hs.append(h)
@@ -1391,18 +1389,17 @@ class Energy_UNetModel_full(nn.Module):
         for module in self.output_blocks:
             h = th.cat([h, hs.pop()], dim=1)
             h = module(h, emb)
-        h = h.to(x.dtype)
 
         unet_out = self.out(h)
 
         # Energy Score = ||x -  f(x)||^2 AE based Energy
-        energy_score = x-unet_out
-        energy_norm_ = 0.5 * (energy_score ** 2)
-        energy_norm= energy_norm_.sum()
+        # energy_score = x-unet_out
+        # energy_norm_ = 0.5 * (energy_score ** 2)
+        # energy_norm= energy_norm_.sum()
 
         # Energy Score = ||f(x)||^2  l2 norm squared
-        # energy_norm_ =  0.5 * (unet_out** 2)
-        # energy_norm = energy_norm_.sum()
+        energy_norm_ =  0.5 * (unet_out** 2)
+        energy_norm = energy_norm_.sum()
 
         if mala_sampler:
             
