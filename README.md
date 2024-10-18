@@ -39,6 +39,8 @@ conda create --name compose_ebm --file requirements.txt
 conda activate compose_ebm
 ```
 
+You can download a training dataset [here](https://www.dropbox.com/scl/fi/b8stn55nalcdegdp0aj5y/dataset_train_larger.npz?rlkey=t0g1baca73lluaxp19icgqgo1&st=ibhozr5x&dl=0)
+
 ## Training
 
 To train the Energy Parameterized Classifier-Free Diffusion model you can run :
